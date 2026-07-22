@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./overrides.css";
+import "./mega.css";
 
 export const metadata: Metadata = {
   title: "MATW Project | Muslim Charity",
