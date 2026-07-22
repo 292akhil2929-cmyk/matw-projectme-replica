@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import OriginalContentSections from "./original-content";
 
 function Image({ fill, priority, sizes, ...props }: any) {
@@ -86,6 +87,51 @@ function DonationBar() { return <section className="donation-bar"><div className
 
 function Home() { return <><DonationBar /><section className="hero-carousel"><Image src={A + "appeal-water-aid.jpg"} alt="Water the gift that flows every day" fill priority /><div className="carousel-dots"><span className="active"></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></section><section className="section urgent-section"><div className="section-heading"><div><span className="eyebrow">Urgent Appeals</span><h2>Help where it matters most</h2></div><Link href="/all-appeals" className="text-link">View all appeals →</Link></div><div className="appeal-grid">{appeals.map(([title, href, image], i) => <Link href={href} className="appeal-card" key={href}><div className="card-image"><Image src={A + ["appeal-gaza-hospital.jpg","appeal-forgotten-ummah.jpg","appeal-gaza-food-water.jpg","appeal-water-aid.jpg","appeal-sudan.jpg","appeal-masjid.jpg","appeal-orphans.jpg","appeal-zakat.jpg"][i]} alt={title} fill /></div><div className="card-copy"><h3>{title}</h3><p>Support families with essential aid today.</p><span>Donate now →</span></div></Link>)}</div></section><section className="promise"><div><span className="eyebrow">Our promise to you</span><h2>100% of your donation goes to the project.</h2><p>When you donate to a project, 100% of your donation (after merchant and banking fees) will be used for direct project costs and donor engagement.</p><Link href="/100-donation-policy" className="button button-dark">Read our policy</Link></div><div className="promise-art"><Image src={A + "policy100.aa465a15ceb7a44e6880.png"} alt="100% donation policy" width={260} height={260} /></div></section><section className="story"><div className="story-image"><Image src={A + "ali-banat-top.88a224fc9abb884ac15f.png"} alt="Ali Banat" fill /></div><div><span className="eyebrow">Ali Banat's legacy</span><h2>One life. A lasting impact.</h2><p>The MATW Project started as a legacy of compassion and has grown to reach over 19 million Muslims in some of the poorest and most vulnerable regions.</p><Link href="/ali-banat" className="button button-teal">Learn more about Ali</Link></div></section><section className="involved section"><div className="section-heading"><div><span className="eyebrow">Get involved today</span><h2>Build your legacy with MATW</h2></div></div><div className="involved-grid"><Link href="/annual-reports"><Image src={A + "view-our-reports.49a29687b1bc114c4c8c.jpg"} alt="" fill /><b>View our reports</b></Link><Link href="/volunteer"><Image src={A + "volunteer-with-us.efada332413c08a69ad3.jpg"} alt="" fill /><b>Volunteer with us</b></Link><Link href="/all-appeals"><Image src={A + "all-appeals.6a4c1516fca9e55cb5ca.jpg"} alt="" fill /><b>All appeals</b></Link></div></section></> }
 
-export function InnerPage({ path }: { path: string }) { const copy = routeCopy[path] || { eyebrow: "MATW Project", title: path === "/top-10" ? "Your donation can change a life today" : "Support Muslims around the world", body: "Together, we deliver food, clean water, medical aid and shelter to families in need. Give with purpose and build your legacy.", image: "legacy12.753a665c4fe79de4b973.png" }; return <><section className="inner-hero"><div><span className="eyebrow">{copy.eyebrow}</span><h1>{copy.title}</h1><p>{copy.body}</p><Link href="/top-10" className="button button-orange">Donate now ↗</Link></div><div className="inner-image"><Image src={A + copy.image} alt="" fill priority sizes="50vw" /></div></section><DonationBar /><section className="content-block"><span className="eyebrow">A little can go a long way</span><h2>Make an impact that lasts</h2><p>Your generosity helps MATW respond with dignity and care. Every project is designed around the needs of the community, from emergency appeals to sustainable Sadaqah Jariyah projects.</p><div className="feature-row"><div><strong>19m+</strong><span>people reached</span></div><div><strong>100%</strong><span>donation policy</span></div><div><strong>40+</strong><span>countries served</span></div></div></section><section className="dark-callout"><span className="eyebrow">Ready to make a difference?</span><h2>Give today. Build your Akhirah.</h2><Link href="/top-10" className="button button-orange">Donate now</Link></section></> }
+type OriginalProduct = { name: string; description?: string; short_description?: string; image_link?: string; usd?: number; aud?: number; status?: number };
+
+function OriginalProjectCopy({ path }: { path: string }) {
+  const [products, setProducts] = useState<OriginalProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const query = useMemo(() => {
+    const p = path.toLowerCase();
+    if (p.includes("zakat")) return ["zakat", "zakat fund"];
+    if (p.includes("masjid") || p.includes("mosque")) return ["masjid", "mosque"];
+    if (p.includes("water") || p.includes("well")) return ["water", "well"];
+    if (p.includes("orphan")) return ["orphan", "orphans"];
+    if (p.includes("palestine") || p.includes("gaza")) return ["gaza", "palestine", "palestinian"];
+    if (p.includes("sudan")) return ["sudan"];
+    if (p.includes("lebanon")) return ["lebanon"];
+    if (p.includes("sacrifice") || p.includes("aqiqah")) return ["sacrifice", "aqiqah", "qurban"];
+    if (p.includes("food") || p.includes("forgotten") || p.includes("appeal")) return ["food", "meal", "aid"];
+    return [];
+  }, [path]);
+
+  useEffect(() => {
+    let active = true;
+    if (!query.length) { setLoading(false); return; }
+    fetch("https://backend.matwcheckout.org/index.php/api/checkout/stripe/all-products-v2", { headers: { "X-user-matw": "ramadan-2024" } })
+      .then((res) => res.json())
+      .then((groups) => {
+        const flattened: OriginalProduct[] = [];
+        const visit = (value: any) => {
+          if (!value || typeof value !== "object") return;
+          if (Array.isArray(value)) return value.forEach(visit);
+          if (typeof value.name === "string" && (value.description || value.short_description) && (value.image_link || value.usd || value.aud)) flattened.push(value);
+          Object.values(value).forEach(visit);
+        };
+        visit(groups);
+        const matches = flattened.filter((item) => item.status !== 0 && query.some((term) => item.name.toLowerCase().includes(term))).filter((item, index, all) => all.findIndex((other) => other.name === item.name) === index).slice(0, 36);
+        if (active) setProducts(matches);
+      })
+      .catch(() => { if (active) setProducts([]); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [query]);
+
+  if (!query.length || (!loading && !products.length)) return null;
+  return <section className="original-project-copy"><div className="section-heading"><div><span className="eyebrow">Original MATW project details</span><h2>Every project, exactly as listed by MATW</h2></div></div>{loading ? <p className="original-loading">Loading the original project descriptions…</p> : <div className="original-project-grid">{products.map((product) => <article className="original-project-card" key={product.name}>{product.image_link ? <img src={product.image_link} alt="" /> : null}<div><h3>{product.name}</h3><p>{product.description || product.short_description}</p><span>{product.usd ? `$${product.usd} USD` : product.aud ? `$${product.aud} AUD` : "Any amount"}</span><Link href="/top-10">Donate Now →</Link></div></article>)}</div>}</section>;
+}
+
+export function InnerPage({ path }: { path: string }) { const copy = routeCopy[path] || { eyebrow: "MATW Project", title: path === "/top-10" ? "Your donation can change a life today" : path.split("/").pop()?.replaceAll("-", " ") || "Support Muslims around the world", body: "Together, we deliver food, clean water, medical aid and shelter to families facing hardship. Explore the original MATW project details below and choose where your support can make a difference.", image: "legacy12.753a665c4fe79de4b973.png" }; return <><section className="inner-hero"><div><span className="eyebrow">{copy.eyebrow}</span><h1>{copy.title}</h1><p>{copy.body}</p><Link href="/top-10" className="button button-orange">Donate now ↗</Link></div><div className="inner-image"><Image src={A + copy.image} alt="" fill priority sizes="50vw" /></div></section><DonationBar /><OriginalProjectCopy path={path} /><section className="content-block"><span className="eyebrow">A little can go a long way</span><h2>Make an impact that lasts</h2><p>Your generosity helps MATW respond with dignity and care. Every project is designed around the needs of the community, from emergency appeals to sustainable Sadaqah Jariyah projects.</p><div className="feature-row"><div><strong>19m+</strong><span>people reached</span></div><div><strong>100%</strong><span>donation policy</span></div><div><strong>40+</strong><span>countries served</span></div></div></section><section className="dark-callout"><span className="eyebrow">Ready to make a difference?</span><h2>Give today. Build your Akhirah.</h2><Link href="/top-10" className="button button-orange">Donate now</Link></section></> }
 
 export default function Page() { const path = usePathname() || "/"; return <><Header /><TopDropdowns />{path === "/" ? <><Home /><OriginalContentSections /><FaqSection /></> : path === "/ali-banat" ? <AliBanatPage /> : path.startsWith("/faq") ? <FaqSection /> : <InnerPage path={path} />}<Footer /></>; }
