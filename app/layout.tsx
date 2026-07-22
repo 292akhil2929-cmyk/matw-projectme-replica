@@ -10,6 +10,7 @@ import "./priority-pages.css";
 import "./calculator-embed.css";
 import "./interactive-priority.css";
 import "./legacy-path.css";
+import "./values-effects.css";
 
 export const metadata: Metadata = {
   title: "MATW Project | Muslim Charity",
