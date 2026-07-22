@@ -4,6 +4,7 @@ import "./overrides.css";
 import "./mega.css";
 import "./content.css";
 import "./original.css";
+import "./top.css";
 
 export const metadata: Metadata = {
   title: "MATW Project | Muslim Charity",
