@@ -6,6 +6,7 @@ import "./content.css";
 import "./original.css";
 import "./top.css";
 import "./original-project.css";
+import "./priority-pages.css";
 
 export const metadata: Metadata = {
   title: "MATW Project | Muslim Charity",
