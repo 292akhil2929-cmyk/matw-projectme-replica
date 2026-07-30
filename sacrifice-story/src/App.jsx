@@ -26,11 +26,11 @@ const MATW_REPORT_2024 = "https://matwproject.org/pdf/MATW_General_2024_Achievem
 const MATW_ZAKAT_2024 = "https://matwproject.org/pdf/MATW_Zakat_2024_Report_V5.pdf";
 
 const sacrifices = [
-  { id: "aqeeqah", name: "Aqeeqah Sheep Sacrifice", place: "Africa", note: "A Sunnah sacrifice offered for the arrival of a child.", price: 90, animal: "sheep" },
-  { id: "nidr", name: "Nidr Sheep Sacrifice", place: "Africa", note: "A sacrifice offered to fulfil a vow or express gratitude.", price: 90, animal: "sheep" },
-  { id: "walimah", name: "Walimah Sheep Sacrifice", place: "Africa", note: "Share the joy of a marriage with families in need.", price: 90, animal: "sheep" },
-  { id: "cow", name: "General Sacrifice", place: "Africa", note: "A voluntary sacrifice supporting vulnerable communities.", price: 520, animal: "cow" },
-  { id: "goat", name: "General Sacrifice", place: "Bangladesh", note: "Fresh meat distributed to families facing hardship.", price: 140, animal: "goat" },
+  { id: "aqeeqah", name: "Aqeeqah Sheep Sacrifice", place: "Africa", note: "A sheep of around 22 kg can provide fresh meat to 80–100 beneficiaries.", price: 90, animal: "sheep", image: "/matw-aqeeqah.jpg" },
+  { id: "nidr", name: "Nidr Sheep Sacrifice", place: "Africa", note: "A sheep of around 22 kg can provide fresh meat to 80–100 beneficiaries.", price: 90, animal: "sheep", image: "/matw-nidr.jpg" },
+  { id: "walimah", name: "Walimah Sheep Sacrifice", place: "Africa", note: "Share the joy of a marriage and provide meat to 80–100 beneficiaries.", price: 90, animal: "sheep", image: "/matw-walimah.jpg" },
+  { id: "cow", name: "Sadaqah Cow Sacrifice", place: "Africa", note: "A cow can provide fresh, nutritious meat to 800–1,000 people.", price: 520, animal: "cow", image: "/matw-cow.jpg" },
+  { id: "goat", name: "Sadaqah Goat Sacrifice", place: "Bangladesh", note: "A voluntary sacrifice supporting vulnerable families in Bangladesh.", price: 140, animal: "goat", image: "/matw-goat.jpg" },
 ];
 
 const faqs = [
@@ -44,8 +44,8 @@ const faqs = [
 function Logo() {
   return (
     <a className="bp-logo" href="#top" aria-label="MATW Sacrifice home">
-      <span><Globe2 size={19} /></span>
-      <strong>MATW</strong>
+      <span><img src="/matw-official-logo.png" alt="" /></span>
+      <strong>MATW PROJECT</strong>
       <small>MUSLIMS AROUND THE WORLD</small>
     </a>
   );
@@ -149,9 +149,13 @@ function Hero() {
         animate={{ opacity: 1, x: 0, rotate: 0 }}
         transition={{ duration: 1, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
       >
-        <img src="/matw-sacrifice-hero.png" alt="White sheep in front of a mosque and blue landscape" />
+        <img className="hero-main-photo" src="/matw-aqeeqah.jpg" alt="MATW sacrifice team member with a sheep" />
+        <div className="hero-side-photos">
+          <img src="/matw-cow.jpg" alt="MATW cow sacrifice project" />
+          <img src="/matw-goat.jpg" alt="MATW goat sacrifice project" />
+        </div>
         <div className="hero-seal" aria-hidden="true"><strong>MATW</strong><span>Sacrifice<br />with meaning</span></div>
-        <span className="image-caption">An intention that travels</span>
+        <span className="image-caption">Official MATW sacrifice projects</span>
       </motion.div>
     </section>
   );
@@ -178,7 +182,7 @@ function ChoiceSection() {
             <button className="product-check" onClick={() => adjust(item.id, quantities[item.id] ? -quantities[item.id] : 1)} aria-label={`Select ${item.name} in ${item.place}`} aria-pressed={quantities[item.id] > 0}>
               {quantities[item.id] > 0 && <Check size={15} />}
             </button>
-            <SheepMark type={item.animal} />
+            <div className="product-photo"><img src={item.image} alt="" /></div>
             <div className="product-copy">
               <h3>{item.name} <span>— {item.place}</span></h3>
               <p>{item.note}</p>
@@ -199,6 +203,7 @@ function ChoiceSection() {
           <span><ClipboardCheck /> Transparent reporting</span>
           <span><Users /> Distributed to families</span>
         </div>
+        <div className="official-policy"><img src="/matw-policy-logos.png" alt="MATW Project donation policy marks" /></div>
         <div className="choice-total">
           <span>Your intention</span>
           <strong>${total} <small>USD</small></strong>
@@ -222,7 +227,10 @@ function MeaningSection() {
         <h2>The Significance of Each Sacrifice</h2>
       </Reveal>
       <motion.article className="aqeeqah-feature" whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 280, damping: 24 }}>
-        <div className="big-sheep"><SheepMark large /></div>
+        <div className="big-sheep">
+          <img src="/matw-aqeeqah.jpg" alt="Official MATW Aqeeqah sheep sacrifice project" />
+          <span><SheepMark /></span>
+        </div>
         <div>
           <span className="meaning-label">AQEEQAH</span>
           <h3>A beautiful Sunnah for the arrival of a child.</h3>
@@ -249,7 +257,7 @@ function Explainer() {
   return (
     <section className="explainer-section" id="how">
       <div className="video-panel">
-        <img src="/light-shared-table.png" alt="A family sharing a meal" />
+        <img src="/matw-sadaqah-sheep.jpg" alt="Official MATW Sadaqah sheep sacrifice project" />
         <span><Play size={25} fill="currentColor" /></span>
       </div>
       <div>
