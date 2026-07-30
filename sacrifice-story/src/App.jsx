@@ -3,6 +3,7 @@ import {
   AnimatePresence,
   motion,
   useInView,
+  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -15,15 +16,15 @@ import {
   Camera,
   Check,
   ChevronDown,
+  CircleDollarSign,
   Globe2,
   Heart,
-  Mail,
   MapPin,
   Minus,
-  Play,
   Plus,
   ShieldCheck,
   Sparkles,
+  Star,
   Users,
 } from "lucide-react";
 
@@ -33,116 +34,73 @@ const MATW_POLICY = "https://matwproject.org/our-promise/100-donation-policy";
 const MATW_REPORT = "https://matwproject.org/pdf/Achievements%20Report%202023.pdf";
 
 const products = [
-  {
-    id: "aqeeqah",
-    name: "Aqeeqah Sheep",
-    location: "Africa",
-    price: 90,
-    type: "A sacred welcome",
-    detail:
-      "A Sunnah sacrifice offered for the arrival of a child, expressing gratitude to Allah and sharing meat with family and people in need.",
-  },
-  {
-    id: "nidr",
-    name: "Nidr Sheep",
-    location: "Africa",
-    price: 90,
-    type: "A vow fulfilled",
-    detail:
-      "A general sacrifice offered to give thanks to Allah or fulfil a vow. MATW’s program operates throughout the year.",
-  },
-  {
-    id: "walimah",
-    name: "Walimah Sheep",
-    location: "Africa",
-    price: 90,
-    type: "A union shared",
-    detail:
-      "A marriage feast that celebrates a new union while sharing food with family, guests and those in need.",
-  },
-  {
-    id: "cow",
-    name: "Sadaqah Cow",
-    location: "Africa",
-    price: 520,
-    type: "A generous act",
-    detail:
-      "MATW states that a cow sacrifice in Africa can provide fresh meat to 800–1,000 beneficiaries.",
-  },
-  {
-    id: "goat",
-    name: "Sadaqah Goat",
-    location: "Bangladesh",
-    price: 140,
-    type: "Charity with sincerity",
-    detail:
-      "A voluntary act of charity carried out at the giver’s discretion, helping provide fresh meat to families in need.",
-  },
+  { id: "aqeeqah", name: "Aqeeqah Sheep", place: "Africa", price: 90, note: "Welcome new life", kind: "sheep" },
+  { id: "nidr", name: "Nidr Sheep", place: "Africa", price: 90, note: "Fulfil a vow", kind: "sheep" },
+  { id: "walimah", name: "Walimah Sheep", place: "Africa", price: 90, note: "Celebrate a union", kind: "sheep" },
+  { id: "cow", name: "Sadaqah Cow", place: "Africa", price: 520, note: "Share generously", kind: "cow" },
+  { id: "goat", name: "Sadaqah Goat", place: "Bangladesh", price: 140, note: "Give sincerely", kind: "goat" },
 ];
 
-const chapters = [
-  ["01", "Choose"],
-  ["02", "Meaning"],
-  ["03", "Journey"],
-  ["04", "Places"],
-  ["05", "Legacy"],
-  ["06", "Proof"],
-  ["07", "Impact"],
-  ["08", "Questions"],
+const meanings = [
+  {
+    title: "Aqeeqah",
+    label: "A new beginning",
+    icon: Baby,
+    copy: "A Sunnah sacrifice offered with gratitude for the arrival of a child.",
+    colour: "blue",
+  },
+  {
+    title: "Nidr",
+    label: "A promise kept",
+    icon: Sparkles,
+    copy: "A sacrifice offered to fulfil a vow or express thanks to Allah.",
+    colour: "pink",
+  },
+  {
+    title: "Walimah",
+    label: "A joy shared",
+    icon: Heart,
+    copy: "A marriage feast that shares celebration with family, guests and people in need.",
+    colour: "sky",
+  },
+  {
+    title: "Sadaqah",
+    label: "A gift freely given",
+    icon: Users,
+    copy: "A voluntary act of charity, offered sincerely at the giver’s discretion.",
+    colour: "navy",
+  },
 ];
 
 const faqs = [
   {
     q: "What is the difference between Nidr and Aqeeqah?",
-    a: "MATW describes a general or Nidr sacrifice as one given for any reason, while Aqeeqah commemorates the arrival of a newborn.",
+    a: "MATW describes Nidr as a sacrifice that can be given for any reason or to fulfil a vow. Aqeeqah commemorates the arrival of a newborn.",
   },
   {
-    q: "Can Aqeeqah and Nidr be given throughout the year?",
+    q: "Can these sacrifices be given throughout the year?",
     a: "Yes. MATW states that its General Sacrifice and Aqeeqah program operates throughout the year.",
   },
   {
     q: "Who receives the meat?",
-    a: "MATW says sacrifices are delivered in impoverished communities, supporting vulnerable people including families with widows, orphans and elderly people.",
+    a: "MATW says sacrifices support vulnerable people in impoverished communities, including families with widows, orphans and elderly people.",
   },
   {
     q: "Will I receive proof?",
-    a: "MATW says proof of delivery and sacrifice can be requested, including images and, in some cases, video. The exact reporting format may vary by project.",
+    a: "MATW says proof can be requested and may include images and, in some cases, video. The exact format can vary by project.",
   },
   {
     q: "What does the 100% Donation Policy mean?",
-    a: "MATW states that, after merchant and banking fees, donations are used for direct project costs and/or donor engagement and fundraising that is reinvested into the project or other MATW projects.",
+    a: "After merchant and banking fees, MATW says donations support direct project costs and/or donor engagement and fundraising reinvested into MATW projects.",
   },
 ];
 
 function Logo() {
   return (
-    <a className="logo" href="#top" aria-label="MATW sacrifice concept home">
-      <span className="logo-mark">
-        <Globe2 size={22} strokeWidth={1.7} />
-      </span>
-      <span>
-        <strong>MATW</strong>
-        <small>PROJECT</small>
-      </span>
+    <a className="logo" href="#top" aria-label="MATW sacrifice story home">
+      <span className="logo-mark"><Globe2 size={21} strokeWidth={1.7} /></span>
+      <span><strong>MATW</strong><small>PROJECT</small></span>
     </a>
-  );
-}
-
-function ScrollRail({ progress }) {
-  return (
-    <aside className="scroll-rail" aria-hidden="true">
-      <div className="rail-track">
-        <motion.div className="rail-progress" style={{ scaleY: progress }} />
-      </div>
-      <div className="rail-labels">
-        {chapters.map(([n, label]) => (
-          <span key={n}>
-            <b>{n}</b>
-            {label}
-          </span>
-        ))}
-      </div>
-    </aside>
   );
 }
 
@@ -150,164 +108,282 @@ function Reveal({ children, className = "", delay = 0 }) {
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 42 }}
+      initial={{ opacity: 0, y: 48 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.18 }}
-      transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>
   );
 }
 
-function AnimalGlyph({ type }) {
-  if (type === "cow") {
+function AnimalGlyph({ kind = "sheep" }) {
+  if (kind === "cow") {
     return (
-      <svg viewBox="0 0 96 72" aria-hidden="true">
-        <path d="M21 25c8-7 34-8 48-1l7 11-5 14H28l-7-9z" />
-        <path d="M70 24l9-7 8 3-2 12-10 4M28 48l-2 16M63 48l3 16M39 48l1 16M75 37l7 3M22 27l-8-7" />
-        <circle cx="82" cy="25" r="2" />
+      <svg viewBox="0 0 110 80" aria-hidden="true">
+        <path d="M21 30c12-8 43-8 57 0l8 14-8 15H28l-9-13z" />
+        <path d="M77 29l10-8 10 4-2 14-12 5M31 57l-2 17M70 57l3 17M45 58l1 16M92 26l7-8M22 34l-10-7" />
+        <circle cx="91" cy="31" r="2.4" />
       </svg>
     );
   }
-  if (type === "goat") {
+  if (kind === "goat") {
     return (
-      <svg viewBox="0 0 96 72" aria-hidden="true">
-        <path d="M23 30c10-8 34-8 46 0l4 16H27l-7-9z" />
-        <path d="M67 29l8-12 9 4 1 13-12 6M30 45l-3 18M61 45l3 18M74 23l-2-10M81 21l4-9M21 31l-8-7" />
-        <circle cx="81" cy="27" r="2" />
+      <svg viewBox="0 0 110 80" aria-hidden="true">
+        <path d="M25 34c11-9 40-9 52 0l5 18H30l-8-11z" />
+        <path d="M75 33l9-14 11 5 1 15-14 7M34 51l-3 22M68 51l4 22M84 25l-2-12M92 24l5-11M24 35l-11-7" />
+        <circle cx="91" cy="32" r="2.4" />
       </svg>
     );
   }
   return (
-    <svg viewBox="0 0 96 72" aria-hidden="true">
-      <path d="M20 34c0-12 12-19 27-17 13-5 29 3 28 18 1 11-10 17-25 14-16 5-31-2-30-15z" />
-      <path d="M70 25l10-8 8 6-4 14-11 2M30 47l-3 17M60 48l4 16M20 31l-8-4M80 20l-2-7" />
-      <circle cx="82" cy="27" r="2" />
+    <svg viewBox="0 0 110 80" aria-hidden="true">
+      <path d="M22 39c0-14 14-22 31-19 15-6 34 4 32 21 1 13-12 19-29 16-18 6-35-2-34-18z" />
+      <path d="M80 29l12-9 9 7-5 16-13 2M34 55l-3 19M68 56l4 18M22 36l-10-5M92 23l-2-8" />
+      <circle cx="94" cy="32" r="2.4" />
     </svg>
   );
 }
 
 function Hero() {
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const artY = useTransform(scrollYProgress, [0, 1], ["0%", "17%"]);
-  const artScale = useTransform(scrollYProgress, [0, 1], [1, 1.09]);
-  const copyY = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.78], [1, 0]);
+  const ref = useRef(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const artY = useTransform(scrollYProgress, [0, 1], ["0%", reduceMotion ? "0%" : "14%"]);
+  const copyY = useTransform(scrollYProgress, [0, 1], ["0%", reduceMotion ? "0%" : "18%"]);
+  const fade = useTransform(scrollYProgress, [0, 0.82], [1, 0.12]);
 
   return (
-    <section className="hero" id="top" ref={heroRef}>
-      <div className="hero-grid" />
-      <motion.div className="hero-copy" style={{ y: copyY, opacity }}>
-        <span className="eyebrow light">
-          <Sparkles size={14} /> Sacrifice with intention
-        </span>
+    <section className="hero" id="top" ref={ref}>
+      <div className="hero-noise" />
+      <motion.div className="hero-copy" style={{ y: copyY, opacity: fade }}>
+        <span className="eyebrow light"><Sparkles size={14} /> A sacrifice story</span>
         <h1>
-          <span>Honour a Sunnah.</span>
-          <span>Fulfil a commitment.</span>
-          <em>Bring joy to lives.</em>
+          <span>One intention.</span>
+          <span className="pink-stroke">A world of</span>
+          <em>nourishment.</em>
         </h1>
         <p>
-          Aqeeqah, Nidr, Walimah or Sadaqah—an act of devotion carried out
-          with care, and fresh meat shared with families in need.
+          Aqeeqah, Nidr, Walimah or Sadaqah—an act of devotion that becomes
+          fresh food, shared with families in need.
         </p>
         <div className="hero-actions">
-          <a className="button button-pink" href="#choose">
-            Choose your sacrifice <ArrowRight size={18} />
-          </a>
-          <a className="text-link light" href="#meaning">
-            Discover the meaning <ArrowDown size={16} />
-          </a>
+          <a className="button button-pink" href="#story">Enter the story <ArrowDown size={18} /></a>
+          <a className="text-link light" href="#choose">Skip to giving <ArrowRight size={16} /></a>
         </div>
       </motion.div>
 
-      <motion.div className="hero-art" style={{ y: artY, scale: artScale }}>
-        <div className="arch-frame">
-          <img src="/matw-sacrifice-hero.png" alt="Layered white and MATW-blue mosque landscape with a sheep" />
+      <motion.div className="hero-visual" style={{ y: artY }}>
+        <div className="hero-sun" />
+        <div className="hero-arch">
+          <img src="/matw-sacrifice-hero.png" alt="White mosque landscape and sheep in MATW blue" />
         </div>
         <motion.div
-          className="orbit orbit-one"
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 28, ease: "linear" }}
-        />
+          className="floating-sticker sticker-one"
+          animate={reduceMotion ? {} : { rotate: [-5, 4, -5], y: [0, -10, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          YEAR-ROUND
+        </motion.div>
         <motion.div
-          className="orbit orbit-two"
-          animate={{ rotate: -360 }}
-          transition={{ repeat: Infinity, duration: 38, ease: "linear" }}
-        />
-        <div className="hero-note">
-          <span>Year-round program</span>
-          <b>Africa · Bangladesh</b>
-        </div>
+          className="floating-sticker sticker-two"
+          animate={reduceMotion ? {} : { rotate: [4, -3, 4], y: [0, 8, 0] }}
+          transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <Heart size={16} fill="currentColor" /> WITH CARE
+        </motion.div>
       </motion.div>
 
-      <div className="hero-trust">
-        {[
-          [ShieldCheck, "100% Donation Policy"],
-          [Heart, "Islamic values"],
-          [Users, "Families in need"],
-          [Camera, "Proof can be requested"],
-        ].map(([Icon, label], i) => (
-          <motion.div
-            key={label}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.65 + i * 0.08 }}
-          >
-            <Icon size={20} />
-            <span>{label}</span>
-          </motion.div>
-        ))}
-      </div>
-      <div className="scroll-cue">
-        <span>Scroll the story</span>
-        <i />
+      <div className="hero-ribbon">
+        <motion.div
+          animate={reduceMotion ? {} : { x: ["0%", "-50%"] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+        >
+          <span>INTENTION BECOMES ACTION</span><Star size={18} fill="currentColor" />
+          <span>ACTION BECOMES NOURISHMENT</span><Star size={18} fill="currentColor" />
+          <span>INTENTION BECOMES ACTION</span><Star size={18} fill="currentColor" />
+          <span>ACTION BECOMES NOURISHMENT</span><Star size={18} fill="currentColor" />
+        </motion.div>
       </div>
     </section>
   );
 }
 
-function ProductRow({ product, qty, setQty, index }) {
+function StoryFrame({ progress, range, className = "", children }) {
+  const reduceMotion = useReducedMotion();
+  const [start, end] = range;
+  const edge = Math.min(0.065, (end - start) / 3);
+  const opacity = useTransform(progress, [start, start + edge, end - edge, end], [0, 1, 1, 0]);
+  const y = useTransform(progress, [start, start + edge, end - edge, end], reduceMotion ? [0, 0, 0, 0] : [70, 0, 0, -70]);
+  const scale = useTransform(progress, [start, start + edge, end - edge, end], reduceMotion ? [1, 1, 1, 1] : [0.94, 1, 1, 1.04]);
+  return <motion.article className={`story-frame ${className}`} style={{ opacity, y, scale }}>{children}</motion.article>;
+}
+
+function ScrollStory() {
+  const ref = useRef(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const background = useTransform(
+    scrollYProgress,
+    [0, 0.28, 0.52, 0.76, 1],
+    ["#f4f7fc", "#3567a8", "#49a4d7", "#ed0065", "#091b35"],
+  );
+  const orbX = useTransform(scrollYProgress, [0, 1], ["-18vw", "18vw"]);
+  const orbRotate = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 260]);
+  const storyScale = useSpring(useTransform(scrollYProgress, [0, 1], [0.12, 1]), {
+    stiffness: 90,
+    damping: 25,
+  });
+
+  return (
+    <motion.section className="story-scroll" id="story" ref={ref} style={{ backgroundColor: background }}>
+      <div className="story-sticky">
+        <motion.div className="story-progress" style={{ scaleX: storyScale }} />
+        <motion.div className="story-orb" style={{ x: orbX, rotate: orbRotate }} />
+        <div className="story-label">Scroll to carry the story</div>
+
+        <StoryFrame progress={scrollYProgress} range={[0, 0.27]} className="scene-intention">
+          <div className="scene-copy">
+            <span className="eyebrow">It begins quietly</span>
+            <h2>A private intention.</h2>
+            <p>A birth. A promise. A marriage. Or simply the wish to give.</p>
+          </div>
+          <div className="intention-visual" aria-hidden="true">
+            <motion.div
+              className="heart-core"
+              animate={reduceMotion ? {} : { scale: [1, 1.08, 1] }}
+              transition={{ duration: 1.8, repeat: Infinity }}
+            >
+              <Heart size={58} fill="currentColor" />
+            </motion.div>
+            <span className="word-orbit orbit-a">AQEEQAH</span>
+            <span className="word-orbit orbit-b">NIDR</span>
+            <span className="word-orbit orbit-c">WALIMAH</span>
+            <span className="word-orbit orbit-d">SADAQAH</span>
+          </div>
+        </StoryFrame>
+
+        <StoryFrame progress={scrollYProgress} range={[0.25, 0.51]} className="scene-amanah">
+          <div className="scene-copy light-copy">
+            <span className="eyebrow light">Then it is entrusted</span>
+            <h2>Care crosses distance.</h2>
+            <p>MATW arranges its year-round sacrifice program across communities in need.</p>
+            <div className="place-chips">
+              <span><MapPin size={15} /> Africa</span>
+              <span><MapPin size={15} /> Bangladesh</span>
+            </div>
+          </div>
+          <div className="world-visual" aria-hidden="true">
+            <Globe2 />
+            <motion.div
+              className="world-ring ring-one"
+              animate={reduceMotion ? {} : { rotate: 360 }}
+              transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+            />
+            <motion.div
+              className="world-ring ring-two"
+              animate={reduceMotion ? {} : { rotate: -360 }}
+              transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+            />
+            <span className="world-dot dot-a" />
+            <span className="world-dot dot-b" />
+          </div>
+        </StoryFrame>
+
+        <StoryFrame progress={scrollYProgress} range={[0.49, 0.76]} className="scene-table">
+          <div className="table-visual" aria-hidden="true">
+            <div className="plate plate-one"><AnimalGlyph /></div>
+            <div className="plate plate-two"><Heart size={42} fill="currentColor" /></div>
+            <div className="plate plate-three"><Users size={46} /></div>
+            <span className="spark s1">✦</span><span className="spark s2">✦</span><span className="spark s3">✦</span>
+          </div>
+          <div className="scene-copy ink-copy">
+            <span className="eyebrow">And becomes nourishment</span>
+            <h2>The table grows.</h2>
+            <p>Fresh meat is shared with vulnerable people in impoverished communities.</p>
+          </div>
+        </StoryFrame>
+
+        <StoryFrame progress={scrollYProgress} range={[0.74, 1]} className="scene-proof">
+          <div className="scene-copy light-copy">
+            <span className="eyebrow light">The story can return</span>
+            <h2>Request the proof.</h2>
+            <p>MATW says donors can request delivery proof, including images and sometimes video.</p>
+            <a href="#choose" className="button button-white">Choose your sacrifice <ArrowDown size={18} /></a>
+          </div>
+          <div className="proof-visual" aria-hidden="true">
+            <motion.div className="proof-photo photo-back" whileHover={{ rotate: -10, y: -8 }}>
+              <Camera size={34} /><span>DELIVERED</span>
+            </motion.div>
+            <motion.div className="proof-photo photo-front" whileHover={{ rotate: 7, y: -8 }}>
+              <img src="/matw-sacrifice-hero.png" alt="" /><Check size={30} />
+            </motion.div>
+          </div>
+        </StoryFrame>
+      </div>
+    </motion.section>
+  );
+}
+
+function MeaningDeck() {
+  return (
+    <section className="meaning-section" id="meaning">
+      <Reveal className="section-heading">
+        <span className="eyebrow">Four moments. Four meanings.</span>
+        <h2>What brings you here?</h2>
+        <p>Each sacrifice begins with a different human moment. Hover, tap or simply explore.</p>
+      </Reveal>
+      <div className="meaning-grid">
+        {meanings.map((item, index) => {
+          const Icon = item.icon;
+          return (
+            <motion.article
+              key={item.title}
+              className={`meaning-card ${item.colour}`}
+              initial={{ opacity: 0, y: 55, rotate: index % 2 ? 1.5 : -1.5 }}
+              whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+              whileHover={{ y: -12, rotate: index % 2 ? -1 : 1 }}
+              viewport={{ once: true, amount: 0.28 }}
+              transition={{ duration: 0.7, delay: index * 0.06 }}
+            >
+              <div className="meaning-top"><span>{item.label}</span><Icon size={28} /></div>
+              <h3>{item.title}</h3>
+              <p>{item.copy}</p>
+              <div className="meaning-arrow"><ArrowRight /></div>
+            </motion.article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function ProductCard({ product, qty, setQty, index }) {
   return (
     <motion.article
-      className={`product-row ${qty > 0 ? "selected" : ""}`}
-      initial={{ opacity: 0, x: 60 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.65, delay: index * 0.06 }}
+      className={`product-card ${qty ? "selected" : ""}`}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.65, delay: index * 0.055 }}
     >
       <button
-        className="product-select"
+        className="product-toggle"
         type="button"
         aria-label={`Select ${product.name}`}
         onClick={() => setQty(product.id, qty ? 0 : 1)}
       >
-        <span className="check-box">{qty > 0 && <Check size={14} />}</span>
+        {qty ? <Check size={18} /> : <Plus size={18} />}
       </button>
-      <div className="animal-glyph" aria-hidden="true">
-        <AnimalGlyph type={product.id} />
-      </div>
-      <div className="product-copy">
-        <span>{product.type}</span>
-        <h3>{product.name}</h3>
-        <p>{product.location}</p>
-      </div>
-      <div className="product-price">
-        <b>${product.price}</b>
-        <small>USD</small>
-      </div>
+      <div className="product-animal"><AnimalGlyph kind={product.kind} /></div>
+      <span className="product-note">{product.note}</span>
+      <h3>{product.name}</h3>
+      <div className="product-meta"><span>{product.place}</span><b>${product.price} <small>USD</small></b></div>
       <div className="stepper" aria-label={`Quantity for ${product.name}`}>
-        <button type="button" onClick={() => setQty(product.id, Math.max(0, qty - 1))} aria-label="Decrease">
-          <Minus size={16} />
-        </button>
+        <button type="button" aria-label={`Decrease ${product.name}`} onClick={() => setQty(product.id, Math.max(0, qty - 1))}><Minus size={16} /></button>
         <output>{qty}</output>
-        <button type="button" onClick={() => setQty(product.id, qty + 1)} aria-label="Increase">
-          <Plus size={16} />
-        </button>
+        <button type="button" aria-label={`Increase ${product.name}`} onClick={() => setQty(product.id, qty + 1)}><Plus size={16} /></button>
       </div>
     </motion.article>
   );
@@ -318,26 +394,20 @@ function SacrificeSelector({ quantities, setQuantity }) {
     () => products.reduce((sum, item) => sum + item.price * (quantities[item.id] || 0), 0),
     [quantities],
   );
-  const items = Object.values(quantities).reduce((sum, value) => sum + value, 0);
+  const itemCount = Object.values(quantities).reduce((sum, value) => sum + value, 0);
 
   return (
-    <section className="section selector-section" id="choose">
-      <div className="section-number">01</div>
-      <div className="selector-intro">
-        <span className="eyebrow">Choose with clarity</span>
-        <h2>Your intention, made tangible.</h2>
-        <p>
-          Select one or more sacrifices. Prices shown are the current USD
-          listings on MATW’s global appeals page as checked in July 2026.
-        </p>
-        <div className="source-pill">
-          <BadgeCheck size={17} />
-          Official MATW listed prices
+    <section className="selector-section" id="choose">
+      <Reveal className="selector-heading">
+        <div>
+          <span className="eyebrow light"><BadgeCheck size={15} /> Official MATW listings</span>
+          <h2>Choose the act.<br />Carry the feeling.</h2>
         </div>
-      </div>
-      <div className="product-list">
+        <p>Current USD prices on MATW’s global appeals page, checked July 2026.</p>
+      </Reveal>
+      <div className="product-grid">
         {products.map((product, index) => (
-          <ProductRow
+          <ProductCard
             key={product.id}
             product={product}
             index={index}
@@ -347,20 +417,15 @@ function SacrificeSelector({ quantities, setQuantity }) {
         ))}
       </div>
       <AnimatePresence>
-        {items > 0 && (
+        {itemCount > 0 && (
           <motion.div
             className="basket-bar"
-            initial={{ y: 120, opacity: 0 }}
+            initial={{ y: 110, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 120, opacity: 0 }}
+            exit={{ y: 110, opacity: 0 }}
           >
-            <div>
-              <span>{items} {items === 1 ? "sacrifice" : "sacrifices"}</span>
-              <b>${total} USD</b>
-            </div>
-            <a href={MATW_APPEALS} target="_blank" rel="noreferrer">
-              Continue with MATW <ArrowRight size={18} />
-            </a>
+            <div><span>{itemCount} {itemCount === 1 ? "sacrifice" : "sacrifices"}</span><b>${total} USD</b></div>
+            <a href={MATW_APPEALS} target="_blank" rel="noreferrer">Continue with MATW <ArrowRight size={18} /></a>
           </motion.div>
         )}
       </AnimatePresence>
@@ -368,301 +433,59 @@ function SacrificeSelector({ quantities, setQuantity }) {
   );
 }
 
-function Meaning() {
-  const cards = [
-    {
-      title: "Aqeeqah",
-      kicker: "Gratitude for new life",
-      icon: Baby,
-      body: "A sacred rite for the arrival of a newborn. The classical ruling described in the brief is two sheep or goats for a boy and one for a girl.",
-      accent: "2 for a boy · 1 for a girl",
-    },
-    {
-      title: "Nidr",
-      kicker: "A vow or thanks",
-      icon: Sparkles,
-      body: "A general sacrifice offered to fulfil a vow or give thanks to Allah. It can be given at any time of year.",
-      accent: "Available year-round",
-    },
-    {
-      title: "Walimah",
-      kicker: "A union shared",
-      icon: Heart,
-      body: "A marriage feast that celebrates the union and shares food with family, guests and those in need.",
-      accent: "Celebration with generosity",
-    },
-    {
-      title: "Sadaqah",
-      kicker: "Charity with sincerity",
-      icon: Users,
-      body: "Voluntary charity, unlike obligatory Zakat. The amount and form are left to the giver’s discretion.",
-      accent: "A voluntary act",
-    },
-  ];
-
-  return (
-    <section className="meaning-section" id="meaning">
-      <div className="section-number light-number">02</div>
-      <div className="meaning-heading">
-        <span className="eyebrow light">Four intentions. One thread.</span>
-        <h2>
-          Every sacrifice begins
-          <br />
-          <em>with meaning.</em>
-        </h2>
-      </div>
-      <div className="meaning-track">
-        {cards.map((card, index) => {
-          const Icon = card.icon;
-          return (
-            <motion.article
-              key={card.title}
-              className="meaning-card"
-              initial={{ opacity: 0, y: 90, rotate: index % 2 ? 2 : -2 }}
-              whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-              viewport={{ once: true, amount: 0.35 }}
-              transition={{ duration: 0.85, delay: index * 0.08 }}
-            >
-              <div className="meaning-icon"><Icon size={25} /></div>
-              <span>0{index + 1} / {card.kicker}</span>
-              <h3>{card.title}</h3>
-              <p>{card.body}</p>
-              <b>{card.accent}</b>
-            </motion.article>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
-function Journey() {
-  const sectionRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-  const pathLength = useSpring(useTransform(scrollYProgress, [0.12, 0.82], [0, 1]), {
-    stiffness: 65,
-    damping: 18,
-  });
-
-  const steps = [
-    ["Intention", "Choose the sacrifice that matches the moment in your life."],
-    ["Amanah", "MATW arranges the year-round program through its delivery network."],
-    ["Nourishment", "Fresh meat reaches vulnerable people in impoverished communities."],
-    ["Proof", "Delivery proof can be requested, including images and sometimes video."],
-  ];
-
-  return (
-    <section className="journey-section" id="journey" ref={sectionRef}>
-      <div className="section-number">03</div>
-      <Reveal className="journey-copy">
-        <span className="eyebrow">How it works</span>
-        <h2>From a private intention to shared nourishment.</h2>
-        <p>
-          The journey is designed around care, Shariah-conscious delivery and
-          transparent reporting—without promising a reporting format MATW does
-          not guarantee.
-        </p>
-      </Reveal>
-      <div className="journey-canvas">
-        <svg viewBox="0 0 1000 360" role="img" aria-label="Animated path connecting the four stages of sacrifice">
-          <path className="route-ghost" d="M60 230 C220 40 320 330 475 165 S735 70 940 210" />
-          <motion.path
-            className="route-live"
-            d="M60 230 C220 40 320 330 475 165 S735 70 940 210"
-            style={{ pathLength }}
-          />
-        </svg>
-        <div className="journey-steps">
-          {steps.map(([title, text], index) => (
-            <motion.article
-              key={title}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.7 }}
-              transition={{ delay: index * 0.12 }}
-            >
-              <span>0{index + 1}</span>
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </motion.article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Locations() {
-  return (
-    <section className="locations-section" id="locations">
-      <div className="section-number light-number">04</div>
-      <Reveal className="locations-copy">
-        <span className="eyebrow light">Where this page serves</span>
-        <h2>Two places. One shared table.</h2>
-        <p>
-          The five sacrifices shown here are currently listed for Africa and
-          Bangladesh on MATW’s global appeals page.
-        </p>
-      </Reveal>
-      <div className="map-stage">
-        <div className="map-grid" />
-        <motion.div
-          className="map-ring ring-africa"
-          animate={{ scale: [1, 1.3, 1], opacity: [0.8, 0.2, 0.8] }}
-          transition={{ repeat: Infinity, duration: 3.2 }}
-        />
-        <motion.div
-          className="map-ring ring-bangladesh"
-          animate={{ scale: [1, 1.3, 1], opacity: [0.8, 0.2, 0.8] }}
-          transition={{ repeat: Infinity, duration: 3.2, delay: 0.8 }}
-        />
-        <svg className="map-route" viewBox="0 0 900 460" aria-hidden="true">
-          <motion.path
-            d="M220 280 C400 210 510 330 700 205"
-            initial={{ pathLength: 0 }}
-            whileInView={{ pathLength: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 2, ease: "easeInOut" }}
-          />
-        </svg>
-        <div className="place place-africa">
-          <MapPin size={18} />
-          <span>Africa</span>
-          <b>Sheep · Cow</b>
-        </div>
-        <div className="place place-bangladesh">
-          <MapPin size={18} />
-          <span>Bangladesh</span>
-          <b>Goat</b>
-        </div>
-        <div className="map-statement">More locations can be added when MATW confirms them.</div>
-      </div>
-    </section>
-  );
-}
-
-function Legacy() {
-  return (
-    <section className="legacy-section" id="legacy">
-      <div className="section-number">05</div>
-      <div className="legacy-visual">
-        <div className="legacy-window">
-          <img src="/matw-sacrifice-hero.png" alt="" />
-        </div>
-        <span className="vertical-copy">A legacy of compassion · 2016—2026</span>
-      </div>
-      <Reveal className="legacy-copy">
-        <span className="eyebrow">Founded by Ali Banat</span>
-        <h2>A life redirected. A legacy still moving.</h2>
-        <p className="large-copy">
-          MATW says it was founded by Ali Banat in 2016 and now works across 30
-          countries. The organisation began in one country—Togo—and grew through
-          a community committed to continuing his legacy.
-        </p>
-        <a className="text-link" href={MATW_AQEEQAH} target="_blank" rel="noreferrer">
-          Read MATW’s Aqeeqah page <ArrowRight size={16} />
-        </a>
-      </Reveal>
-    </section>
-  );
-}
-
-function Reporting() {
-  const proof = [
-    [Check, "Donation processed", "Your selected appeal is confirmed through MATW."],
-    [ShieldCheck, "Program delivered", "MATW arranges the sacrifice and distribution."],
-    [Mail, "Proof requested", "Donors can request proof of delivery and sacrifice."],
-    [Camera, "Images or video", "MATW states proof includes images and, in some cases, video."],
-  ];
-
-  return (
-    <section className="reporting-section" id="reporting">
-      <div className="section-number">06</div>
-      <Reveal className="reporting-heading">
-        <span className="eyebrow">Amanah, made visible</span>
-        <h2>Proof without overpromising.</h2>
-        <p>
-          The wireframe promised fixed email and WhatsApp updates. MATW’s public
-          page is more precise: proof can be requested and may include images or
-          video. This page uses that verified wording.
-        </p>
-      </Reveal>
-      <div className="proof-strip">
-        {proof.map(([Icon, title, text], index) => (
-          <Reveal className="proof-card" delay={index * 0.08} key={title}>
-            <span>0{index + 1}</span>
-            <Icon size={24} />
-            <h3>{title}</h3>
-            <p>{text}</p>
-          </Reveal>
-        ))}
-      </div>
-      <div className="policy-banner">
-        <ShieldCheck size={30} />
-        <div>
-          <b>100% Donation Policy</b>
-          <p>
-            After merchant/banking fees, MATW says donations support direct
-            project costs and/or donor engagement and fundraising reinvested
-            into the project or other MATW projects.
-          </p>
-        </div>
-        <a href={MATW_POLICY} target="_blank" rel="noreferrer">
-          Read the policy <ArrowRight size={16} />
-        </a>
-      </div>
-    </section>
-  );
-}
-
-function CountUp({ value, suffix = "" }) {
-  const ref = useRef(null);
-  const seen = useInView(ref, { once: true, margin: "-20%" });
-  return (
-    <motion.span
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={seen ? { opacity: 1, y: 0 } : {}}
-    >
-      {value}{suffix}
-    </motion.span>
-  );
-}
-
-function Impact() {
+function ImpactBurst() {
   return (
     <section className="impact-section" id="impact">
-      <div className="section-number light-number">07</div>
-      <div className="impact-orbit" />
+      <motion.div
+        className="impact-word"
+        initial={{ x: "18%" }}
+        whileInView={{ x: "-8%" }}
+        viewport={{ amount: 0.2 }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        aria-hidden="true"
+      >
+        COMPASSION IN MOTION
+      </motion.div>
       <Reveal className="impact-heading">
-        <span className="eyebrow light">Published impact</span>
-        <h2>One country became thirty.</h2>
-        <p>
-          Figures below come from MATW’s published 2023 Achievements Report and
-          are labelled by reporting period rather than presented as live totals.
-        </p>
+        <span className="eyebrow light">Published 2023 impact</span>
+        <h2>One country<br />became thirty.</h2>
+        <p>These are dated report figures—not presented as live totals.</p>
       </Reveal>
-      <div className="impact-grid">
-        <article>
-          <CountUp value="30" />
-          <p>countries reached in the 2023 report</p>
-        </article>
-        <article>
-          <CountUp value="2M" suffix="+" />
-          <p>people supported each year, as reported in 2023</p>
-        </article>
-        <article>
-          <CountUp value="96M" />
-          <p>meals served since inception, reported in 2023</p>
-        </article>
-        <article className="impact-source">
-          <a href={MATW_REPORT} target="_blank" rel="noreferrer">
-            Open MATW’s 2023 report <ArrowRight size={18} />
-          </a>
-        </article>
+      <div className="impact-cards">
+        <article className="impact-card card-sky"><strong>30</strong><span>countries reached in the 2023 report</span></article>
+        <article className="impact-card card-pink"><strong>2M+</strong><span>people supported yearly, reported in 2023</span></article>
+        <article className="impact-card card-white"><strong>96M</strong><span>meals served since inception, reported in 2023</span></article>
+      </div>
+      <a className="report-link" href={MATW_REPORT} target="_blank" rel="noreferrer">Open MATW’s 2023 report <ArrowRight size={17} /></a>
+    </section>
+  );
+}
+
+function PromiseSection() {
+  const cards = [
+    [ShieldCheck, "100% Donation Policy", "Read MATW’s exact policy wording before giving."],
+    [Globe2, "30 countries", "MATW’s 2023 report describes growth from Togo to 30 countries."],
+    [Camera, "Proof on request", "Delivery images—and sometimes video—can be requested."],
+  ];
+  return (
+    <section className="promise-section">
+      <Reveal className="promise-copy">
+        <span className="eyebrow">Trust needs plain language</span>
+        <h2>No vague promises.<br />Just what MATW says.</h2>
+        <p>
+          Founded by Ali Banat in 2016, MATW describes a legacy that began in
+          Togo and grew into work across 30 countries.
+        </p>
+        <a className="text-link" href={MATW_AQEEQAH} target="_blank" rel="noreferrer">Read the official Aqeeqah page <ArrowRight size={16} /></a>
+      </Reveal>
+      <div className="promise-cards">
+        {cards.map(([Icon, title, text], index) => (
+          <Reveal className="promise-card" delay={index * 0.08} key={title}>
+            <Icon size={26} />
+            <div><h3>{title}</h3><p>{text}</p></div>
+            {index === 0 && <a href={MATW_POLICY} target="_blank" rel="noreferrer" aria-label="Read MATW donation policy"><ArrowRight /></a>}
+          </Reveal>
+        ))}
       </div>
     </section>
   );
@@ -672,28 +495,21 @@ function FAQ() {
   const [open, setOpen] = useState(0);
   return (
     <section className="faq-section" id="faq">
-      <div className="section-number">08</div>
       <Reveal className="faq-heading">
-        <span className="eyebrow">Questions, answered plainly</span>
-        <h2>Give with understanding.</h2>
+        <span className="eyebrow">Ask before you give</span>
+        <h2>Clear answers.<br /><em>Open hearts.</em></h2>
       </Reveal>
       <div className="faq-list">
         {faqs.map((item, index) => (
           <article className={open === index ? "open" : ""} key={item.q}>
             <button type="button" onClick={() => setOpen(open === index ? -1 : index)}>
-              <span>0{index + 1}</span>
+              <span>{String(index + 1).padStart(2, "0")}</span>
               {item.q}
-              <motion.i animate={{ rotate: open === index ? 180 : 0 }}>
-                <ChevronDown size={20} />
-              </motion.i>
+              <motion.i animate={{ rotate: open === index ? 180 : 0 }}><ChevronDown size={20} /></motion.i>
             </button>
             <AnimatePresence initial={false}>
               {open === index && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                >
+                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
                   <p>{item.a}</p>
                 </motion.div>
               )}
@@ -708,29 +524,22 @@ function FAQ() {
 function Footer() {
   return (
     <footer>
+      <div className="footer-shape" aria-hidden="true"><AnimalGlyph /></div>
       <div className="footer-cta">
-        <span className="eyebrow light">Begin with intention</span>
-        <h2>Your sacrifice can become someone’s nourishment.</h2>
-        <a className="button button-pink" href="#choose">
-          Choose your sacrifice <ArrowRight size={18} />
-        </a>
+        <span className="eyebrow light">Your turn</span>
+        <h2>Let one intention<br /><em>travel further.</em></h2>
+        <a className="button button-white" href="#choose">Choose your sacrifice <ArrowRight size={18} /></a>
       </div>
       <div className="footer-bottom">
         <Logo />
-        <p>
-          MATW INTERNATIONAL LTD · ABN 60 610 666 325 · Registered charity and
-          Public Benevolent Institution.
-        </p>
+        <p>MATW INTERNATIONAL LTD · ABN 60 610 666 325 · Registered charity and Public Benevolent Institution.</p>
         <div>
           <a href={MATW_APPEALS} target="_blank" rel="noreferrer">Official appeals</a>
           <a href={MATW_POLICY} target="_blank" rel="noreferrer">Donation policy</a>
-          <a href={MATW_REPORT} target="_blank" rel="noreferrer">Impact report</a>
+          <a href={MATW_REPORT} target="_blank" rel="noreferrer">2023 report</a>
         </div>
       </div>
-      <p className="concept-note">
-        Independent design concept using public MATW facts. Donations continue
-        on MATW’s official website.
-      </p>
+      <p className="concept-note">Independent design concept using public MATW facts. Donations continue on MATW’s official website.</p>
     </footer>
   );
 }
@@ -738,35 +547,29 @@ function Footer() {
 export default function App() {
   const [quantities, setQuantities] = useState({});
   const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 25, restDelta: 0.001 });
-
-  const setQuantity = (id, value) => {
-    setQuantities((current) => ({ ...current, [id]: Math.min(20, Math.max(0, value)) }));
-  };
+  const pageProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 24, restDelta: 0.001 });
+  const setQuantity = (id, value) => setQuantities((current) => ({ ...current, [id]: Math.min(20, Math.max(0, value)) }));
 
   return (
     <>
-      <motion.div className="top-progress" style={{ scaleX: progress }} />
+      <motion.div className="top-progress" style={{ scaleX: pageProgress }} />
       <header>
         <Logo />
         <nav aria-label="Primary navigation">
-          <a href="#meaning">Meaning</a>
-          <a href="#journey">How it works</a>
+          <a href="#story">The story</a>
+          <a href="#meaning">The meaning</a>
           <a href="#impact">Impact</a>
           <a href="#faq">FAQs</a>
         </nav>
-        <a className="nav-cta" href="#choose">Give now</a>
+        <a className="nav-cta" href="#choose"><CircleDollarSign size={17} /> Give now</a>
       </header>
-      <ScrollRail progress={progress} />
       <main>
         <Hero />
+        <ScrollStory />
+        <MeaningDeck />
         <SacrificeSelector quantities={quantities} setQuantity={setQuantity} />
-        <Meaning />
-        <Journey />
-        <Locations />
-        <Legacy />
-        <Reporting />
-        <Impact />
+        <ImpactBurst />
+        <PromiseSection />
         <FAQ />
       </main>
       <Footer />
