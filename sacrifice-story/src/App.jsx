@@ -149,13 +149,7 @@ function Hero() {
         animate={{ opacity: 1, x: 0, rotate: 0 }}
         transition={{ duration: 1, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
       >
-        <img className="hero-main-photo" src="/matw-aqeeqah.jpg" alt="MATW sacrifice team member with a sheep" />
-        <div className="hero-side-photos">
-          <img src="/matw-cow.jpg" alt="MATW cow sacrifice project" />
-          <img src="/matw-goat.jpg" alt="MATW goat sacrifice project" />
-        </div>
-        <div className="hero-seal" aria-hidden="true"><strong>MATW</strong><span>Sacrifice<br />with meaning</span></div>
-        <span className="image-caption">Official MATW sacrifice projects</span>
+        <img className="hero-line-art" src="/matw-line-hero-v2.png" alt="Blue line illustration of a sheep standing in front of a mosque" />
       </motion.div>
     </section>
   );
