@@ -129,14 +129,25 @@ function Hero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
       >
-        <span className="eyebrow">MATW Sacrifice</span>
         <h1>Honour a Sunnah.<br />Fulfil a Commitment.<br /><em>Bring Joy to Lives.</em></h1>
         <p>Whether it is Aqeeqah, Nidr, Walimah or a general sacrifice, your offering is an act of devotion and a means of providing fresh meat to families in need.</p>
         <div className="hero-values">
-          <span><ShieldCheck /> Rooted in Islamic values</span>
-          <span><Heart /> Compassion and reward</span>
-          <span><Users /> Feed families in need</span>
-          <span><BadgeCheck /> Transparent delivery</span>
+          <article>
+            <span>01</span><ShieldCheck />
+            <div><strong>A sacred intention</strong><small>Rooted in Islamic values</small></div>
+          </article>
+          <article>
+            <span>02</span><Heart />
+            <div><strong>Mercy multiplied</strong><small>Devotion becomes nourishment</small></div>
+          </article>
+          <article>
+            <span>03</span><Users />
+            <div><strong>80–100 people</strong><small>May benefit from one sheep</small></div>
+          </article>
+          <article>
+            <span>04</span><BadgeCheck />
+            <div><strong>Amanah documented</strong><small>Clear project reporting</small></div>
+          </article>
         </div>
         <div className="hero-buttons">
           <a className="primary-button" href="#choose">Give Your Sacrifice <ArrowRight size={17} /></a>
