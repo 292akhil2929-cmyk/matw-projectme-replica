@@ -1,9 +1,10 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
   useReducedMotion,
   useScroll,
+  useMotionValue,
   useSpring,
   useTransform,
 } from "framer-motion";
@@ -30,6 +31,16 @@ const MATW_POLICY = "https://matwproject.org/our-promise/100-donation-policy";
 const MATW_REPORT_2024 = "https://matwproject.org/pdf/MATW_General_2024_Achievements_Report_V7.pdf";
 const MATW_ZAKAT_2024 = "https://matwproject.org/pdf/MATW_Zakat_2024_Report_V5.pdf";
 const LIMBS_OF_HOPE = "https://donate.matwproject.org/limbs-of-hope-palestine62431543";
+
+const lightMotes = Array.from({ length: 26 }, (_, index) => ({
+  id: index,
+  left: `${(index * 37 + 11) % 98}%`,
+  top: `${(index * 53 + 7) % 92}%`,
+  size: 2 + (index % 4),
+  delay: (index % 9) * 0.37,
+  duration: 4.8 + (index % 6) * 0.7,
+  tone: index % 5 === 0 ? "pink" : index % 3 === 0 ? "sky" : "warm",
+}));
 
 const sacrifices = [
   {
@@ -123,6 +134,49 @@ function Reveal({ children, className = "", delay = 0 }) {
   );
 }
 
+function LightCursor() {
+  const reduce = useReducedMotion();
+  const cursorX = useMotionValue(-120);
+  const cursorY = useMotionValue(-120);
+  const x = useSpring(cursorX, { stiffness: 520, damping: 38, mass: 0.22 });
+  const y = useSpring(cursorY, { stiffness: 520, damping: 38, mass: 0.22 });
+
+  useEffect(() => {
+    if (reduce) return undefined;
+    const move = (event) => {
+      cursorX.set(event.clientX - 22);
+      cursorY.set(event.clientY - 22);
+    };
+    window.addEventListener("pointermove", move, { passive: true });
+    return () => window.removeEventListener("pointermove", move);
+  }, [cursorX, cursorY, reduce]);
+
+  if (reduce) return null;
+
+  return (
+    <motion.div className="light-cursor" style={{ x, y }} aria-hidden="true">
+      <span />
+      <i />
+    </motion.div>
+  );
+}
+
+function JoyRibbon() {
+  const phrases = ["NIYYAH", "AMANAH", "COMPASSION", "EXCELLENCE", "LIGHT IN MOTION"];
+  return (
+    <section className="joy-ribbon" aria-label="MATW values in motion">
+      <div className="ribbon-track">
+        {[...phrases, ...phrases].map((phrase, index) => (
+          <React.Fragment key={`${phrase}-${index}`}>
+            <span>{phrase}</span>
+            <i aria-hidden="true" />
+          </React.Fragment>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Hero() {
   const ref = useRef(null);
   const reduce = useReducedMotion();
@@ -194,6 +248,9 @@ function LightJourney() {
   const impactY = useTransform(scrollYProgress, [0, 0.2, 0.46, 0.72, 1], ["5vh", "24vh", "46vh", "64vh", "78vh"]);
   const impactScale = useTransform(scrollYProgress, [0, 0.28, 0.56, 0.82, 1], [0.35, 0.65, 1.15, 0.82, 1.3]);
   const impactOpacity = useTransform(scrollYProgress, [0, 0.08, 0.48, 0.92, 1], [0, 0.52, 0.9, 0.72, 0.25]);
+  const bloomX = useTransform(scrollYProgress, [0, 0.3, 0.58, 0.82, 1], ["-9vw", "10vw", "-4vw", "12vw", "2vw"]);
+  const bloomY = useTransform(scrollYProgress, [0, 0.45, 1], ["-8vh", "14vh", "-2vh"]);
+  const bloomRotate = useTransform(scrollYProgress, [0, 1], [-8, reduce ? -8 : 24]);
   const tableReveal = useTransform(scrollYProgress, [0.39, 0.48, 0.61, 0.69], ["inset(48% 48% 48% 48% round 50%)", "inset(0% 0% 0% 0% round 0%)", "inset(0% 0% 0% 0% round 0%)", "inset(44% 44% 44% 44% round 50%)"]);
   const progressScale = useSpring(scrollYProgress, { stiffness: 90, damping: 24 });
 
@@ -202,6 +259,22 @@ function LightJourney() {
       <div className="journey-stage">
         <motion.div className="journey-progress" style={{ scaleX: progressScale }} />
         <div className="journey-grain" />
+        <motion.div className="stage-aurora" style={{ x: bloomX, y: bloomY, rotate: bloomRotate }} aria-hidden="true">
+          <span className="bloom bloom-blue" />
+          <span className="bloom bloom-sky" />
+          <span className="bloom bloom-pink" />
+        </motion.div>
+        <div className="light-motes" aria-hidden="true">
+          {lightMotes.map((mote) => (
+            <motion.i
+              key={mote.id}
+              className={`light-mote mote-${mote.tone}`}
+              style={{ left: mote.left, top: mote.top, width: mote.size, height: mote.size }}
+              animate={reduce ? {} : { y: [0, -18 - mote.size * 2, 0], opacity: [0.12, 0.82, 0.12], scale: [0.7, 1.45, 0.7] }}
+              transition={{ duration: mote.duration, delay: mote.delay, repeat: Infinity, ease: "easeInOut" }}
+            />
+          ))}
+        </div>
         <motion.div
           className="travelling-beam"
           style={{ x: beamX, y: beamDrop, rotate: beamRotate, width: beamWidth, scaleY: beamScaleY }}
@@ -514,6 +587,7 @@ export default function App() {
 
   return (
     <>
+      <LightCursor />
       <motion.div className="page-progress" style={{ scaleX: progress }} />
       <header>
         <Logo />
@@ -527,6 +601,7 @@ export default function App() {
       <main>
         <Hero />
         <LightJourney />
+        <JoyRibbon />
         <FieldNote />
         <GiveSection />
         <PromiseSection />
