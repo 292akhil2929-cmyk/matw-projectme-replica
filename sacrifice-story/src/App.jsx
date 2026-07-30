@@ -160,7 +160,7 @@ function Hero() {
         animate={{ opacity: 1, x: 0, rotate: 0 }}
         transition={{ duration: 1, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
       >
-        <img className="hero-line-art" src="/matw-line-hero-v2.png" alt="Blue line illustration of a sheep standing in front of a mosque" />
+        <img className="hero-line-art" src="/matw-colour-hero-v3.png" alt="Colour illustration of a sheep standing before a mosque in the MATW palette" />
       </motion.div>
     </section>
   );
