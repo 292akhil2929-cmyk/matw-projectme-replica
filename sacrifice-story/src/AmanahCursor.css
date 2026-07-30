@@ -1,0 +1,80 @@
+.amanah-cursor-wrapper {
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.amanah-crescent {
+  position: absolute;
+  left: -10px;
+  top: -10px;
+  width: 20px;
+  height: 20px;
+  filter: drop-shadow(0 0 5px rgba(201, 161, 90, 0.58));
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.amanah-corner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border-style: solid;
+  border-width: 0;
+  will-change: transform, opacity;
+}
+
+.corner-tl {
+  border-top-width: 2px;
+  border-left-width: 2px;
+  clip-path: polygon(0 0, 100% 0, 100% 35%, 35% 35%, 35% 100%, 0 100%);
+}
+
+.corner-tr {
+  border-top-width: 2px;
+  border-right-width: 2px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 65% 100%, 65% 35%, 0 35%);
+}
+
+.corner-br {
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 65%, 65% 65%, 65% 0);
+}
+
+.corner-bl {
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  clip-path: polygon(0 0, 35% 0, 35% 65%, 100% 65%, 100% 100%, 0 100%);
+}
+
+.amanah-ripple {
+  position: fixed;
+  z-index: 9998;
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  transform-origin: center;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.amanah-cursor-active,
+  html.amanah-cursor-active * {
+    cursor: none !important;
+  }
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 768px) {
+  .amanah-cursor-wrapper {
+    display: none;
+  }
+}

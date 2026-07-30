@@ -19,6 +19,7 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import AmanahCursor from "./AmanahCursor";
 
 const MATW_APPEALS = "https://matwproject.org/en/all-appeals";
 const MATW_POLICY = "https://matwproject.org/our-promise/100-donation-policy";
@@ -381,6 +382,7 @@ function Footer() {
 export default function App() {
   return (
     <div className="blueprint-page">
+      <AmanahCursor />
       <PageProgress />
       <Header />
       <main>
