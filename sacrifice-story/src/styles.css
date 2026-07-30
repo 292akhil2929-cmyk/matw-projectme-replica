@@ -87,16 +87,15 @@ h1, h2, h3, p { margin-top: 0; }
 .bp-hero h1 em { color: var(--sky); font-weight: 500; }
 .bp-hero-copy > p { max-width: 650px; color: rgba(255,255,255,.7); font-size: 14px; line-height: 1.7; }
 .hero-values { margin-top: 28px; display: grid; grid-template-columns: 1.08fr .92fr; gap: 10px; }
-.hero-values article { position: relative; min-height: 94px; padding: 17px 34px 17px 17px; display: grid; grid-template-columns: 42px 1fr; align-items: center; gap: 12px; color: var(--navy); background: white; border: 1px solid rgba(255,255,255,.24); border-radius: 11px; box-shadow: 0 12px 32px rgba(0,0,0,.1); transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
+.hero-values article { position: relative; min-height: 94px; padding: 17px; display: grid; grid-template-columns: 42px 1fr; align-items: center; gap: 12px; color: var(--navy); background: white; border: 1px solid rgba(255,255,255,.5); border-radius: 11px; box-shadow: 0 12px 32px rgba(0,0,0,.1); transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
 .hero-values article:hover { z-index: 2; transform: translateY(-5px) rotate(-.35deg); box-shadow: 0 20px 44px rgba(0,0,0,.18); }
-.hero-values article:nth-child(2) { background: var(--cyan-soft); }
-.hero-values article:nth-child(3) { color: var(--navy); background: linear-gradient(135deg, #70dcf7, var(--sky)); }
-.hero-values article:nth-child(4) { color: white; background: var(--blue); border-top: 4px solid var(--pink); }
-.hero-values article > span { position: absolute; right: 12px; top: 10px; color: rgba(21,36,81,.38); font-size: 8px; font-weight: 800; letter-spacing: .12em; }
-.hero-values article:nth-child(4) > span { color: rgba(255,255,255,.45); }
+.hero-values article:nth-child(1) { background: linear-gradient(135deg, white, #f3fcff); }
+.hero-values article:nth-child(2) { background: linear-gradient(135deg, #e9f9fd, #d4f2fa); }
+.hero-values article:nth-child(3) { color: var(--navy); background: linear-gradient(135deg, #91daf0, #65c7e6); }
+.hero-values article:nth-child(4) { color: white; background: linear-gradient(135deg, #55add8, #3197cb); }
 .hero-values svg { width: 28px; height: 28px; color: var(--sky); }
 .hero-values article:nth-child(3) svg { color: var(--navy); }
-.hero-values article:nth-child(4) svg { color: #6edcff; }
+.hero-values article:nth-child(4) svg { color: white; }
 .hero-values article div { display: grid; gap: 4px; }
 .hero-values strong { font-size: 11px; line-height: 1.2; }
 .hero-values small { color: var(--muted); font-size: 7px; line-height: 1.35; }

@@ -133,19 +133,19 @@ function Hero() {
         <p>Whether it is Aqeeqah, Nidr, Walimah or a general sacrifice, your offering is an act of devotion and a means of providing fresh meat to families in need.</p>
         <div className="hero-values">
           <article>
-            <span>01</span><ShieldCheck />
+            <ShieldCheck />
             <div><strong>A sacred intention</strong><small>Rooted in Islamic values</small></div>
           </article>
           <article>
-            <span>02</span><Heart />
+            <Heart />
             <div><strong>Mercy multiplied</strong><small>Devotion becomes nourishment</small></div>
           </article>
           <article>
-            <span>03</span><Users />
+            <Users />
             <div><strong>80–100 people</strong><small>May benefit from one sheep</small></div>
           </article>
           <article>
-            <span>04</span><BadgeCheck />
+            <BadgeCheck />
             <div><strong>Amanah documented</strong><small>Clear project reporting</small></div>
           </article>
         </div>
