@@ -189,6 +189,11 @@ function LightJourney() {
   const beamX = useTransform(scrollYProgress, [0, 0.22, 0.48, 0.74, 1], ["62vw", "18vw", "52vw", "7vw", "45vw"]);
   const beamRotate = useTransform(scrollYProgress, [0, 0.5, 1], [-18, reduce ? -18 : 8, reduce ? -18 : -12]);
   const beamWidth = useTransform(scrollYProgress, [0, 0.42, 0.62, 1], ["8vw", "12vw", "36vw", "16vw"]);
+  const beamDrop = useTransform(scrollYProgress, [0, 0.18, 0.42, 0.68, 0.84, 1], ["-5vh", "7vh", "18vh", "30vh", "42vh", "56vh"]);
+  const beamScaleY = useTransform(scrollYProgress, [0, 0.16, 0.42, 0.72, 1], [0.28, 0.48, 0.76, 0.98, 1.16]);
+  const impactY = useTransform(scrollYProgress, [0, 0.2, 0.46, 0.72, 1], ["5vh", "24vh", "46vh", "64vh", "78vh"]);
+  const impactScale = useTransform(scrollYProgress, [0, 0.28, 0.56, 0.82, 1], [0.35, 0.65, 1.15, 0.82, 1.3]);
+  const impactOpacity = useTransform(scrollYProgress, [0, 0.08, 0.48, 0.92, 1], [0, 0.52, 0.9, 0.72, 0.25]);
   const tableReveal = useTransform(scrollYProgress, [0.39, 0.48, 0.61, 0.69], ["inset(48% 48% 48% 48% round 50%)", "inset(0% 0% 0% 0% round 0%)", "inset(0% 0% 0% 0% round 0%)", "inset(44% 44% 44% 44% round 50%)"]);
   const progressScale = useSpring(scrollYProgress, { stiffness: 90, damping: 24 });
 
@@ -197,7 +202,20 @@ function LightJourney() {
       <div className="journey-stage">
         <motion.div className="journey-progress" style={{ scaleX: progressScale }} />
         <div className="journey-grain" />
-        <motion.div className="travelling-beam" style={{ x: beamX, rotate: beamRotate, width: beamWidth }} />
+        <motion.div
+          className="travelling-beam"
+          style={{ x: beamX, y: beamDrop, rotate: beamRotate, width: beamWidth, scaleY: beamScaleY }}
+        >
+          <span className="beam-core" />
+        </motion.div>
+        <motion.div
+          className="beam-impact"
+          style={{ x: beamX, y: impactY, scale: impactScale, opacity: impactOpacity }}
+          aria-hidden="true"
+        >
+          <span />
+          <i />
+        </motion.div>
 
         <StoryScene progress={scrollYProgress} range={[0, 0.22]} className="scene-faith">
           <div className="scene-copy">
