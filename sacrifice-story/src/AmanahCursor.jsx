@@ -4,12 +4,13 @@ import "./AmanahCursor.css";
 
 const CORNER_SIZE = 16;
 const CORNER_GAP = 3;
+const TARGET_BUFFER = 18;
 
 export default function AmanahCursor({
   targetSelector = "a, button, summary",
   donateSelector = ".primary-button, .bp-header-actions a, .choice-total a, .footer-cta a",
   crescentColor = "#c9a15a",
-  cornerColor = "#0b5a45",
+  cornerColor = "#00a3da",
   rippleColor = "rgba(201, 161, 90, 0.55)",
 }) {
   const cursorRef = useRef(null);
@@ -33,6 +34,7 @@ export default function AmanahCursor({
     const cursor = cursorRef.current;
     const crescent = crescentRef.current;
     const corners = cornersRef.current.filter(Boolean);
+    const targetNodes = Array.from(document.querySelectorAll(targetSelector));
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const motionDuration = reducedMotion ? 0 : 0.28;
 
@@ -105,6 +107,31 @@ export default function AmanahCursor({
       positionCorners(target, x, y, true);
     };
 
+    const getTargetAt = (x, y) => {
+      const directTarget = document.elementFromPoint(x, y)?.closest?.(targetSelector);
+      if (directTarget) return directTarget;
+
+      let nearestTarget = null;
+      let nearestDistance = Number.POSITIVE_INFINITY;
+      targetNodes.forEach((target) => {
+        const rect = target.getBoundingClientRect();
+        const withinBuffer =
+          x >= rect.left - TARGET_BUFFER &&
+          x <= rect.right + TARGET_BUFFER &&
+          y >= rect.top - TARGET_BUFFER &&
+          y <= rect.bottom + TARGET_BUFFER;
+        if (!withinBuffer) return;
+        const centerX = (rect.left + rect.right) / 2;
+        const centerY = (rect.top + rect.bottom) / 2;
+        const distance = (centerX - x) ** 2 + (centerY - y) ** 2;
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestTarget = target;
+        }
+      });
+      return nearestTarget;
+    };
+
     const onMove = (event) => {
       pointerRef.current = { x: event.clientX, y: event.clientY };
       gsap.to(cursor, {
@@ -116,8 +143,7 @@ export default function AmanahCursor({
         overwrite: true,
       });
 
-      const hoveredElement = document.elementFromPoint(event.clientX, event.clientY);
-      const hoveredTarget = hoveredElement?.closest?.(targetSelector) ?? null;
+      const hoveredTarget = getTargetAt(event.clientX, event.clientY);
       if (hoveredTarget && hoveredTarget !== activeTargetRef.current) {
         activateTarget(hoveredTarget, event.clientX, event.clientY);
       } else if (!hoveredTarget && activeTargetRef.current) {
@@ -128,14 +154,14 @@ export default function AmanahCursor({
     };
 
     const onOver = (event) => {
-      const target = event.target.closest?.(targetSelector);
+      const target = getTargetAt(pointerRef.current.x, pointerRef.current.y) || event.target.closest?.(targetSelector);
       activateTarget(target, pointerRef.current.x, pointerRef.current.y);
     };
 
     const onOut = (event) => {
       const activeTarget = activeTargetRef.current;
       if (!activeTarget || activeTarget.contains(event.relatedTarget)) return;
-      const nextTarget = event.relatedTarget?.closest?.(targetSelector);
+      const nextTarget = getTargetAt(pointerRef.current.x, pointerRef.current.y);
       if (nextTarget === activeTarget) return;
       hideCorners();
     };
@@ -144,8 +170,8 @@ export default function AmanahCursor({
       const activeTarget = activeTargetRef.current;
       if (!activeTarget) return;
       const { x, y } = pointerRef.current;
-      const underPointer = document.elementFromPoint(x, y);
-      if (!underPointer || !activeTarget.contains(underPointer)) {
+      const underPointer = getTargetAt(x, y);
+      if (underPointer !== activeTarget) {
         hideCorners();
         return;
       }
