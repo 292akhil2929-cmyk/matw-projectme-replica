@@ -205,7 +205,7 @@ h1, h2, h3, p { margin-top: 0; }
 .location-grid { margin-top: 35px; display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
 .location-grid article { position: relative; overflow: hidden; min-height: 210px; padding: 28px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; background: var(--blue); border: 1px solid transparent; border-radius: 10px; box-shadow: 0 15px 45px rgba(40,95,168,.12); transition: transform .3s ease, filter .3s ease; }
 .location-grid article:nth-child(2) { background: linear-gradient(135deg, var(--sky), #006f9d); }
-.location-grid article:nth-child(3) { background: var(--navy); border-top: 7px solid var(--pink); }
+.location-grid article:nth-child(3) { background: var(--navy); border-top: 1px solid transparent; }
 .location-grid article::after { content: ""; position: absolute; right: -42px; bottom: -42px; width: 100px; height: 100px; border: 18px solid var(--sky); border-radius: 50%; opacity: .14; }
 .location-grid article:hover { color: white; filter: saturate(1.12) brightness(.96); }
 .location-grid article:hover svg, .location-grid article:hover small { color: white; }
