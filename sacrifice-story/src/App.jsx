@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 import {
   ArrowRight,
   BadgeCheck,
@@ -71,24 +71,31 @@ function SheepMark({ type = "sheep", large = false }) {
   );
 }
 
-function FallingBeam() {
-  const reduce = useReducedMotion();
+function PageProgress() {
   const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, { stiffness: 78, damping: 25, mass: 0.35 });
-  const x = useTransform(progress, [0, 0.18, 0.4, 0.63, 0.82, 1], ["66vw", "18vw", "68vw", "28vw", "74vw", "44vw"]);
-  const y = useTransform(progress, [0, 0.25, 0.5, 0.75, 1], ["-36vh", "-10vh", "15vh", "38vh", "62vh"]);
-  const height = useTransform(progress, [0, 0.22, 0.55, 1], ["42vh", "76vh", "112vh", "138vh"]);
-  const width = useTransform(progress, [0, 0.4, 0.72, 1], ["8vw", "14vw", "24vw", "16vw"]);
-  const rotate = useTransform(progress, [0, 0.5, 1], [-11, reduce ? -11 : 6, reduce ? -11 : -7]);
-  const poolY = useTransform(progress, [0, 1], ["10vh", "76vh"]);
-  const poolScale = useTransform(progress, [0, 0.5, 1], [0.45, 1.15, 0.78]);
+  const scaleX = useSpring(scrollYProgress, { stiffness: 130, damping: 28, mass: 0.25 });
+  return <motion.div className="page-progress" style={{ scaleX }} aria-hidden="true" />;
+}
 
+function Reveal({ children, className = "", delay = 0 }) {
   return (
-    <div className="beam-system" aria-hidden="true">
-      <motion.div className="single-beam" style={{ x, y, height, width, rotate }}>
-        <i />
-      </motion.div>
-      <motion.div className="beam-pool" style={{ x, y: poolY, scale: poolScale }} />
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 34, clipPath: "inset(0 0 12% 0)" }}
+      whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
+      viewport={{ once: true, amount: 0.16 }}
+      transition={{ duration: 0.78, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function ValuesBand() {
+  const phrase = "SACRIFICE WITH MEANING  •  AQEEQAH  •  NIDR  •  WALIMAH  •  AMANAH IN ACTION  •  ";
+  return (
+    <div className="values-band" aria-label="Sacrifice with meaning">
+      <div><span>{phrase}</span><span aria-hidden="true">{phrase}</span></div>
     </div>
   );
 }
@@ -115,7 +122,13 @@ function Header() {
 function Hero() {
   return (
     <section className="bp-hero" id="top">
-      <div className="bp-hero-copy">
+      <div className="hero-grid-mark" aria-hidden="true" />
+      <motion.div
+        className="bp-hero-copy"
+        initial={{ opacity: 0, y: 28 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+      >
         <span className="eyebrow">MATW Sacrifice</span>
         <h1>Honour a Sunnah.<br />Fulfil a Commitment.<br /><em>Bring Joy to Lives.</em></h1>
         <p>Whether it is Aqeeqah, Nidr, Walimah or a general sacrifice, your offering is an act of devotion and a means of providing fresh meat to families in need.</p>
@@ -129,10 +142,17 @@ function Hero() {
           <a className="primary-button" href="#choose">Give Your Sacrifice <ArrowRight size={17} /></a>
           <a className="outline-button" href="#how"><Play size={15} fill="currentColor" /> How It Works</a>
         </div>
-      </div>
-      <div className="bp-hero-visual">
+      </motion.div>
+      <motion.div
+        className="bp-hero-visual"
+        initial={{ opacity: 0, x: 38, rotate: 1.5 }}
+        animate={{ opacity: 1, x: 0, rotate: 0 }}
+        transition={{ duration: 1, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+      >
         <img src="/matw-sacrifice-hero.png" alt="White sheep in front of a mosque and blue landscape" />
-      </div>
+        <div className="hero-seal" aria-hidden="true"><strong>MATW</strong><span>Sacrifice<br />with meaning</span></div>
+        <span className="image-caption">An intention that travels</span>
+      </motion.div>
     </section>
   );
 }
@@ -154,7 +174,7 @@ function ChoiceSection() {
       </div>
       <div className="product-list">
         {sacrifices.map((item) => (
-          <article className={quantities[item.id] ? "selected" : ""} key={item.id}>
+          <motion.article className={quantities[item.id] ? "selected" : ""} key={item.id} whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 360, damping: 28 }}>
             <button className="product-check" onClick={() => adjust(item.id, quantities[item.id] ? -quantities[item.id] : 1)} aria-label={`Select ${item.name} in ${item.place}`} aria-pressed={quantities[item.id] > 0}>
               {quantities[item.id] > 0 && <Check size={15} />}
             </button>
@@ -169,7 +189,7 @@ function ChoiceSection() {
               <button onClick={() => adjust(item.id, 1)} aria-label={`Increase ${item.name}`}><Plus size={14} /></button>
             </div>
             <strong>${item.price} <small>USD</small></strong>
-          </article>
+          </motion.article>
         ))}
       </div>
       <div className="choice-footer">
@@ -197,11 +217,11 @@ function MeaningSection() {
   ];
   return (
     <section className="meaning-section" id="meaning">
-      <div className="section-heading">
+      <Reveal className="section-heading">
         <span>02 · Meaning</span>
         <h2>The Significance of Each Sacrifice</h2>
-      </div>
-      <article className="aqeeqah-feature">
+      </Reveal>
+      <motion.article className="aqeeqah-feature" whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 280, damping: 24 }}>
         <div className="big-sheep"><SheepMark large /></div>
         <div>
           <span className="meaning-label">AQEEQAH</span>
@@ -213,10 +233,12 @@ function MeaningSection() {
             <span><strong>1 sacrifice</strong> commonly recommended for a girl</span>
           </div>
         </div>
-      </article>
+      </motion.article>
       <div className="meaning-cards">
-        {cards.map(([title, copy, Icon]) => (
-          <article key={title}><Icon /><h3>{title}</h3><p>{copy}</p></article>
+        {cards.map(([title, copy, Icon], index) => (
+          <motion.article key={title} whileHover={{ y: -8 }} transition={{ type: "spring", stiffness: 320, damping: 24 }}>
+            <span className="card-number">0{index + 1}</span><Icon /><h3>{title}</h3><p>{copy}</p>
+          </motion.article>
         ))}
       </div>
     </section>
@@ -247,15 +269,15 @@ function Explainer() {
 function Locations() {
   return (
     <section className="locations-section">
-      <div className="section-heading">
+      <Reveal className="section-heading">
         <span>04 · Places</span>
         <h2>Where We Sacrifice</h2>
         <p>Current sacrifice options shown on this page are available in Africa and Bangladesh.</p>
-      </div>
+      </Reveal>
       <div className="location-grid">
-        <article><MapPinned /><strong>Africa</strong><small>Sheep and cow options</small></article>
-        <article><MapPinned /><strong>Bangladesh</strong><small>Goat sacrifice option</small></article>
-        <article className="coming"><Globe2 /><strong>More locations</strong><small>Subject to current appeals</small></article>
+        <motion.article whileHover={{ y: -8, rotate: -0.5 }}><MapPinned /><strong>Africa</strong><small>Sheep and cow options</small></motion.article>
+        <motion.article whileHover={{ y: -8, rotate: 0.5 }}><MapPinned /><strong>Bangladesh</strong><small>Goat sacrifice option</small></motion.article>
+        <motion.article className="coming" whileHover={{ y: -8 }}><Globe2 /><strong>More locations</strong><small>Subject to current appeals</small></motion.article>
       </div>
     </section>
   );
@@ -281,18 +303,18 @@ function LegacyAndProof() {
         <blockquote>“Your sacrifice is a means of hope, dignity and mercy.”</blockquote>
       </section>
       <section className="proof-section">
-        <div className="section-heading">
+        <Reveal className="section-heading">
           <span>06 · Reporting</span>
           <h2>Your Sacrifice. Their Amanah.</h2>
-        </div>
+        </Reveal>
         <div className="proof-grid">
           {steps.map(([Icon, title, copy], index) => (
-            <article key={title}>
+            <motion.article key={title} whileHover={{ y: -8 }} transition={{ type: "spring", stiffness: 320, damping: 24 }}>
               <span>0{index + 1}</span>
               {Icon === SheepMark ? <SheepMark /> : <Icon />}
               <h3>{title}</h3>
               <p>{copy}</p>
-            </article>
+            </motion.article>
           ))}
         </div>
         <a className="policy-link" href={MATW_POLICY} target="_blank" rel="noreferrer"><ShieldCheck /> Read MATW’s exact donation policy</a>
@@ -346,10 +368,11 @@ function Footer() {
 export default function App() {
   return (
     <div className="blueprint-page">
-      <FallingBeam />
+      <PageProgress />
       <Header />
       <main>
         <Hero />
+        <ValuesBand />
         <ChoiceSection />
         <MeaningSection />
         <Explainer />
