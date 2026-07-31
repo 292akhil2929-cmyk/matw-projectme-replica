@@ -249,9 +249,9 @@ function MeaningSection() {
         </div>
       </motion.article>
       <div className="meaning-cards">
-        {cards.map(([title, copy, Icon], index) => (
+        {cards.map(([title, copy, Icon]) => (
           <motion.article key={title} whileHover={{ y: -8 }} transition={{ type: "spring", stiffness: 320, damping: 24 }}>
-            <span className="card-number">0{index + 1}</span><Icon /><h3>{title}</h3><p>{copy}</p>
+            <Icon /><h3>{title}</h3><p>{copy}</p>
           </motion.article>
         ))}
       </div>
