@@ -1,17 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..800,0..100&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --navy: #152451;
-  --navy-2: #1c306a;
-  --blue: #253b7e;
-  --blue-2: #3155a5;
-  --sky: #00a3da;
-  --sky-pale: #e8f9ff;
-  --pink: #f60362;
+  /* MATW core palette: deep blue, cyan and pink */
+  --navy: #10244b;
+  --navy-2: #193b73;
+  --blue: #244d91;
+  --blue-2: #2f6ba8;
+  --sky: #45add8;
+  --sky-pale: #e6f7fc;
+  --pink: #ed0064;
   --pink-pale: #fff0f6;
-  --blue-pale: #eef2ff;
-  --cyan-soft: #dff8ff;
-  --paper: #f7faff;
+  --blue-pale: #edf3fb;
+  --cyan-soft: #d9f2fb;
+  --paper: #f5fbfe;
   --white: #fff;
   --ink: #12315f;
   --muted: #6e84a6;
@@ -92,7 +93,7 @@ h1, h2, h3, p { margin-top: 0; }
 .hero-values article:nth-child(1) { background: linear-gradient(135deg, white, #f3fcff); }
 .hero-values article:nth-child(2) { background: linear-gradient(135deg, #e9f9fd, #d4f2fa); }
 .hero-values article:nth-child(3) { color: var(--navy); background: linear-gradient(135deg, #91daf0, #65c7e6); }
-.hero-values article:nth-child(4) { color: white; background: linear-gradient(135deg, #55add8, #3197cb); }
+.hero-values article:nth-child(4) { color: white; background: linear-gradient(135deg, var(--pink), #c90058); }
 .hero-values svg { width: 28px; height: 28px; color: var(--sky); }
 .hero-values article:nth-child(3) svg { color: var(--navy); }
 .hero-values article:nth-child(4) svg { color: white; }
